@@ -1,3 +1,5 @@
+## this app leans on Rails as a foundation, but doesn't use web client as much (mvc - vc)
+
 source "https://rubygems.org"
 
 ruby "2.4.0"
@@ -62,3 +64,9 @@ end
 group :staging, :production do
   gem "rack-timeout"
 end
+
+## custom for this app
+# gem 'adafruit-io', '~> 1.0', '>= 1.0.4'
+gem 'mqtt'
+gem 'adafruit-io', :git => 'https://github.com/captproton/io-client-ruby.git' #rubygems activemodel old
+
