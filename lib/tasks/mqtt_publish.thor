@@ -1,6 +1,7 @@
 require "thor"
+require 'mqtt'        # gem install mqtt ;  https://github.com/njh/ruby-mqtt
 
-class MqttPublish < Thor
+class MqttPublication < Thor
   ADAFRUIT_THROTTLE_PUBLISHES_PER_SECOND = 2     # limit to N requests per second
   # Required
   require "./config/environment"
@@ -40,27 +41,24 @@ class MqttPublish < Thor
   }.freeze
 
   ## thor methods
-  # desc "count", "counts from 1 to 5"
-  # def count
-  #   puts "1, 2, 3, 4, 5"
-  # end
-  #
-  # desc "counttwo", "counts from 1 to 5"
-  # def counttwo
-  #   puts "1, 2, 3, 4, 5"
-  # end
-  #
-  desc "publish_photocell", "publishes bogus data"
-  def publish_photocell
-    # Publish
-    # Connect, then for each pair of args, send the second arg to the first.
 
-    if ARGV.length > 1
+    desc "hello NAME", "say hello to NAME"
+    def hello(name)
+      option :from, :required => true
+      option :yell, :type => :boolean
+          output = []
+          output << "from: #{options[:from]}" if options[:from]
+          output << "Hello #{name}"
+          output = output.join("\n")
+          puts options[:yell] ? output.upcase : output
+    end
+    
+    desc "send feed_name [value or payload]/[format if any]", "publish to a subscription"
+    def send(feed_name, value_arg)
       MQTT::Client.connect(ADAFRUIT_CONNECT_INFO) do |client|
-        break if ARGV.length < 2
 
-        feed  = ARGV.shift
-        value = ARGV.shift.dup        # arg is frozen and MQTT wants to force encode
+        feed  = feed_name
+        value = value_arg        # arg is frozen and MQTT wants to force encode
 
         topic = if ADAFRUIT_FORMAT.nil? || feed.end_with?(ADAFRUIT_FORMAT)
                   "#{ADAFRUIT_USER}/f/#{feed}"
@@ -76,20 +74,7 @@ class MqttPublish < Thor
       end
 
       exit 0
-    end
 
-  end
-
-    option :from, :required => true
-    option :yell, :type => :boolean
-    desc "hello NAME", "say hello to NAME"
-    def hello(name)
-          output = []
-          output << "from: #{options[:from]}" if options[:from]
-          output << "Hello #{name}"
-          output = output.join("\n")
-          puts options[:yell] ? output.upcase : output
     end
-  
 end
-MqttPublish.start(ARGV)
+# MqttSubscription.start(ARGV)

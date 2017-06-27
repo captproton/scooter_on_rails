@@ -1,6 +1,8 @@
 # Scooter on rails
 
-## Getting Started
+## What this does
+
+This app is a pubsub client that resides on a small computer like a Raspberry Pi.  It resides in a rails app to take advantage of the foundation of rails.
 
 After you have cloned this repo, run this setup script to set up your machine
 with the necessary dependencies to run and test this app:
